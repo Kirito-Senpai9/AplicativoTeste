@@ -1,69 +1,39 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableWithoutFeedback, Animated } from 'react-native';
-import { useRef } from 'react';
+import { StyleSheet, Text, View, Button } from 'react-native';
+import React, { useState } from 'react';
 
-/**
- * Componente principal do aplicativo.
- * Exibe um botão animado com o nome do usuário e a barra de status.
- */
 export default function App() {
-  // Valor animado responsável pela escala do botão
-  const scaleAnim = useRef(new Animated.Value(1)).current;
-
-  // Reduz levemente o botão quando pressionado
-  const handlePressIn = () => {
-    Animated.spring(scaleAnim, {
-      toValue: 0.9,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  // Retorna o botão ao tamanho original ao soltar
-  const handlePressOut = () => {
-    Animated.spring(scaleAnim, {
-      toValue: 1,
-      friction: 3,
-      useNativeDriver: true,
-    }).start();
-  };
+  const [contador, setContador] = useState(0);
 
   return (
     <View style={styles.container}>
-      {/* Botão animado que envolve o nome "Eduardo Kaic" */}
-      <TouchableWithoutFeedback
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-      >
-        <Animated.View
-          style={[styles.button, { transform: [{ scale: scaleAnim }] }]}
-        >
-          <Text style={styles.buttonText}>Eduardo Kaic</Text>
-        </Animated.View>
-      </TouchableWithoutFeedback>
+      <Text style={styles.titulo}>Contador de Cliques</Text>
+      <Text style={styles.numero}>Você clicou {contador} vezes</Text>
+
+      <Button
+        title="Clique aqui"
+        onPress={() => setContador(contador + 1)}
+      />
+
       <StatusBar style="auto" />
     </View>
   );
 }
 
-// Estilos usados em todo o aplicativo
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#220549ff',
+    backgroundColor: '#f5c7d5ff',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  // Estilo do botão animado
-  button: {
-    backgroundColor: '#fff',
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 8,
-    elevation: 3,
-  },
-  // Estilo do texto dentro do botão
-  buttonText: {
-    color: '#000',
+  titulo: {
+    fontSize: 24,
     fontWeight: 'bold',
+    marginBottom: 15,
+  },
+  numero: {
+    fontSize: 18,
+    marginBottom: 10,
   },
 });
