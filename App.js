@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useRef } from 'react';
-import { StyleSheet, Text, TextInput, View, TouchableOpacity, Animated } from 'react-native';
+import React, { useRef, useEffect } from 'react';
+import { StyleSheet, TextInput, TouchableOpacity, Animated } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 
 const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
@@ -8,6 +8,8 @@ const AnimatedTouchable = Animated.createAnimatedComponent(TouchableOpacity);
 export default function App() {
   const loginScale = useRef(new Animated.Value(1)).current;
   const signupScale = useRef(new Animated.Value(1)).current;
+  const lightOneAnim = useRef(new Animated.Value(0)).current;
+  const lightTwoAnim = useRef(new Animated.Value(0)).current;
 
   const bounce = (anim) => {
     Animated.sequence([
@@ -16,44 +18,93 @@ export default function App() {
     ]).start();
   };
 
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(lightOneAnim, { toValue: 1, duration: 4000, useNativeDriver: true }),
+        Animated.timing(lightOneAnim, { toValue: 0, duration: 4000, useNativeDriver: true }),
+      ])
+    ).start();
+
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(lightTwoAnim, { toValue: 1, duration: 5000, useNativeDriver: true }),
+        Animated.timing(lightTwoAnim, { toValue: 0, duration: 5000, useNativeDriver: true }),
+      ])
+    ).start();
+  }, [lightOneAnim, lightTwoAnim]);
+
+  const lightOneStyle = {
+    ...styles.lightOne,
+    transform: [
+      {
+        translateX: lightOneAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, 40],
+        }),
+      },
+      {
+        translateY: lightOneAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, 40],
+        }),
+      },
+    ],
+  };
+
+  const lightTwoStyle = {
+    ...styles.lightTwo,
+    transform: [
+      {
+        translateX: lightTwoAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, -40],
+        }),
+      },
+      {
+        translateY: lightTwoAnim.interpolate({
+          inputRange: [0, 1],
+          outputRange: [0, -40],
+        }),
+      },
+    ],
+  };
+
   return (
     <LinearGradient colors={['#4e0066', '#8a2be2']} style={styles.container}>
-      <View style={styles.lightOne} />
-      <View style={styles.lightTwo} />
+      <Animated.View style={lightOneStyle} />
+      <Animated.View style={lightTwoStyle} />
 
-      <View style={styles.form}>
-        <Text style={styles.title}>Bem-vindo</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Gmail"
-          placeholderTextColor="#ddd"
-          keyboardType="email-address"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Senha"
-          placeholderTextColor="#ddd"
-          secureTextEntry
-        />
-        <AnimatedTouchable
-          activeOpacity={0.8}
-          onPress={() => bounce(loginScale)}
-          style={{ transform: [{ scale: loginScale }], width: '100%' }}
-        >
-          <LinearGradient colors={['#8E2DE2', '#4A00E0']} style={styles.button}>
-            <Text style={styles.buttonText}>Login</Text>
-          </LinearGradient>
-        </AnimatedTouchable>
-        <AnimatedTouchable
-          activeOpacity={0.8}
-          onPress={() => bounce(signupScale)}
-          style={{ transform: [{ scale: signupScale }], width: '100%' }}
-        >
-          <LinearGradient colors={['#4A00E0', '#8E2DE2']} style={[styles.button, styles.buttonSecondary]}>
-            <Text style={styles.buttonText}>Cadastre-se</Text>
-          </LinearGradient>
-        </AnimatedTouchable>
-      </View>
+      <TextInput
+        style={styles.input}
+        placeholder="Gmail"
+        placeholderTextColor="#ddd"
+        keyboardType="email-address"
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Senha"
+        placeholderTextColor="#ddd"
+        secureTextEntry
+      />
+      <AnimatedTouchable
+        activeOpacity={0.8}
+        onPress={() => bounce(loginScale)}
+        style={{ transform: [{ scale: loginScale }], width: '80%' }}
+      >
+        <LinearGradient colors={['#8E2DE2', '#4A00E0']} style={styles.button}>
+          <Text style={styles.buttonText}>Login</Text>
+        </LinearGradient>
+      </AnimatedTouchable>
+      <AnimatedTouchable
+        activeOpacity={0.8}
+        onPress={() => bounce(signupScale)}
+        style={{ transform: [{ scale: signupScale }], width: '80%' }}
+      >
+        <LinearGradient colors={['#4A00E0', '#8E2DE2']} style={[styles.button, styles.buttonSecondary]}>
+          <Text style={styles.buttonText}>Cadastre-se</Text>
+        </LinearGradient>
+      </AnimatedTouchable>
       <StatusBar style="light" />
     </LinearGradient>
   );
@@ -83,22 +134,8 @@ const styles = StyleSheet.create({
     bottom: -50,
     right: -50,
   },
-  form: {
-    width: '80%',
-    padding: 25,
-    borderRadius: 20,
-    backgroundColor: 'rgba(0,0,0,0.25)',
-    zIndex: 1,
-  },
-  title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#fff',
-    textAlign: 'center',
-    marginBottom: 30,
-  },
   input: {
-    width: '100%',
+    width: '80%',
     backgroundColor: 'rgba(255,255,255,0.1)',
     borderRadius: 10,
     padding: 12,
