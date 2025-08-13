@@ -12,7 +12,7 @@ export default function App() {
 
       <Button
         title="Clique aqui"
-        onPress={() => setContador(contador + 1)}
+        onPress={() => setContador((prev) => prev + 1)}
       />
 
       <StatusBar style="auto" />
