@@ -1,18 +1,21 @@
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View, Button } from 'react-native';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput } from 'react-native';
 
 export default function App() {
-  const [nome, setNome] = useState(0);
+  const [contador, setContador] = useState(0);
 
   return (
     <View style={styles.container}>
-      <TextInput
-       style={styles.input}
-       placeholder="Digite seu nome"
-       value={nome}
-       onChangeText={setNome}
+      <Text style={styles.titulo}>Contador de Cliques</Text>
+      <Text style={styles.numero}>Você clicou {contador} vezes</Text>
+
+      <Button
+        title="Clique aqui"
+        onPress={() => setContador(contador + 1)}
       />
-      <Text style={styles.texto}>Olá, {nome || 'visitante'}!</Text>
+
+      <StatusBar style="auto" />
     </View>
   );
 }
@@ -20,13 +23,17 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
+    backgroundColor: '#f5c7d5ff',
     alignItems: 'center',
-    padding: 20,
+    justifyContent: 'center',
   },
-  input: {
-    height: 40,
-    borderColor: 'grav',
-   
-  },
+  titulo: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 15,
+  },
+  numero: {
+    fontSize: 18,
+    marginBottom: 10,
+  },
 });
