@@ -4,16 +4,16 @@ import React, { useState } from 'react';
 
 export default function App() {
   const [contador, setContador] = useState(0);
-  const incrementar = () => {
-    setContador((prev) => prev + 1);
-  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.titulo}>Contador de Cliques</Text>
       <Text style={styles.numero}>Você clicou {contador} vezes</Text>
 
-      <Button title="Clique aqui" onPress={incrementar} />
+      <Button
+        title="Clique aqui"
+        onPress={() => setContador(contador + 1)}
+      />
 
       <StatusBar style="auto" />
     </View>
@@ -23,7 +23,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5c7d5ff',
+    backgroundColor: '#8d00f9ff',
     alignItems: 'center',
     justifyContent: 'center',
   },
